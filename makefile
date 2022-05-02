@@ -66,7 +66,7 @@ unit-test: ## run unit test
 ########################################################
 build:  ## build dbpack cli, and put in dist dir
 	@mkdir -p dist
-	${GO_BUILD_ENVVARS} go build -o ./dist/dbpack ./cmd
+	${GO_BUILD_ENVVARS} go build -gcflags=all="-N -l" -o ./dist/dbpack ./cmd
 
 ########################################################
 docker-build: build ## build docker image

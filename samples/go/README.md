@@ -29,11 +29,11 @@ vim ./samples/go/config3.yaml
 # update data_source_cluster.dsn
 # update distributed_transaction.etcd_config.endpoints
 
-./dist/dbpack start -config ../samples/go/config1.yml
+./dist/dbpack start --config ../samples/go/config1.yaml
 
-./dist/dbpack start -config ../samples/go/config2.yml
+./dist/dbpack start --config ../samples/go/config2.yaml
 
-./dist/dbpack start -config ../samples/go/config3.yml
+./dist/dbpack start --config ../samples/go/config3.yaml
 ```
 
 ### Step4: setup aggregation_svc client
@@ -63,5 +63,5 @@ go run product_svc/main.go
 
 ### Step7: access and test
 ```
-curl -XPOST http://localhost:13000/v1/order/create
+curl -X POST http://localhost:13000/v1/order/create
 ```
