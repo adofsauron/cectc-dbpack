@@ -24,6 +24,8 @@ import (
 	"fmt"
 	"net/http"
 
+	go_logger "github.com/phachon/go-logger"
+
 	"github.com/dbpack/samples/order_svc/dao"
 	dao2 "github.com/dbpack/samples/product_svc/dao"
 )
@@ -36,6 +38,9 @@ func GetSvc() *Svc {
 }
 
 func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
+
+	logger := go_logger.NewLogger()
+
 	soMasters := []*dao.SoMaster{
 		{
 			BuyerUserSysNo:       10001,
@@ -85,6 +90,8 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 	req1.Header.Set("Content-Type", "application/json")
 	req1.Header.Set("xid", xid)
 
+	logger.Debug(fmt.Sprintf("POST http://localhost:3001/createSo, req: %s", soReq))
+
 	client := &http.Client{}
 	result1, err1 := client.Do(req1)
 	if err1 != nil {
@@ -105,6 +112,8 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 	}
 	req2.Header.Set("Content-Type", "application/json")
 	req2.Header.Set("xid", xid)
+
+	logger.Debug(fmt.Sprintf("POST http://localhost:3001/allocateInventory, req: %s", ivtReq))
 
 	result2, err2 := client.Do(req2)
 	if err2 != nil {

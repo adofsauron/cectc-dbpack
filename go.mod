@@ -51,14 +51,19 @@ require (
 	github.com/cznic/golex v0.0.0-20181122101858-9c343928389c // indirect
 	github.com/danjacques/gofslock v0.0.0-20191023191349-0a45f885bc37 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/fatih/color v1.10.0 // indirect
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
+	github.com/mailru/easyjson v0.7.0 // indirect
+	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/opentracing/opentracing-go v1.1.0 // indirect
+	github.com/phachon/go-logger v0.0.0-20191215032019-86e4227f71ea // indirect
 	github.com/pingcap/failpoint v0.0.0-20210316064728-7acb0f0a3dfd // indirect
 	github.com/pingcap/kvproto v0.0.0-20210806074406-317f69fb54b4 // indirect
 	github.com/pingcap/parser v0.0.0-20210831085004-b5390aa83f65 // indirect
