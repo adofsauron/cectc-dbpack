@@ -1,6 +1,5 @@
 #!/bin/bash
 
-mkdir logs
 mkdir -p logs
 
 cd go/aggregation_svc
