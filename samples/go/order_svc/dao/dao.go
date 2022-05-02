@@ -81,6 +81,8 @@ type SoItem struct {
 }
 
 func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster) ([]uint64, error) {
+	log.Debug(fmt.Sprintf("CreateSO xid = %s", xid))
+
 	result := make([]uint64, 0, len(soMasters))
 	tx, err := dao.Begin()
 	if err != nil {

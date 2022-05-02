@@ -28,7 +28,6 @@ import (
 
 	"github.com/dbpack/samples/order_svc/dao"
 	dao2 "github.com/dbpack/samples/product_svc/dao"
-
 )
 
 type Svc struct {
@@ -39,6 +38,8 @@ func GetSvc() *Svc {
 }
 
 func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
+	log.Debug(fmt.Sprintf("CreateSo xid = %s", xid))
+
 	soMasters := []*dao.SoMaster{
 		{
 			BuyerUserSysNo:       10001,

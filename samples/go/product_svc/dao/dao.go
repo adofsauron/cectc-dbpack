@@ -39,6 +39,8 @@ type AllocateInventoryReq struct {
 }
 
 func (dao *Dao) AllocateInventory(ctx context.Context, xid string, reqs []*AllocateInventoryReq) error {
+	log.Debug(fmt.Sprintf("AllocateInventory xid = %s", xid))
+
 	tx, err := dao.Begin()
 	if err != nil {
 		return err
