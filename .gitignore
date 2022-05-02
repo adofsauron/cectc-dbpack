@@ -3,3 +3,4 @@
 coverage.txt
 dist/
 samples/logs/
+samples/default.etcd/
