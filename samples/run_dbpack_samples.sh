@@ -2,7 +2,7 @@
 
 mkdir -p logs
 
-# pkill -15 dbpack
+# pkill dbpack
 # sleep 3s
 
 echo "../dist/dbpack start --config ../samples/go/config1.yaml 2>&1  | tee -a  ./logs/config1.log > ./logs/config1.log &"
