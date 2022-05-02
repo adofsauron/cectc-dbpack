@@ -111,7 +111,7 @@ func (svc *Svc) CreateSo(ctx context.Context, xid string, rollback bool) error {
 	req2.Header.Set("Content-Type", "application/json")
 	req2.Header.Set("xid", xid)
 
-	log.Debug(fmt.Sprintf("POST http://localhost:3001/allocateInventory, req: %s", ivtReq))
+	log.Debug(fmt.Sprintf("POST http://localhost:3002/allocateInventory, req: %s", ivtReq))
 
 	result2, err2 := client.Do(req2)
 	if err2 != nil {
