@@ -24,7 +24,6 @@ import (
 
 	"github.com/cectc/dbpack/pkg/log"
 	"github.com/google/uuid"
-	go_logger "github.com/phachon/go-logger"
 
 )
 
@@ -82,8 +81,6 @@ type SoItem struct {
 }
 
 func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster) ([]uint64, error) {
-	logger := go_logger.NewLogger()
-
 	result := make([]uint64, 0, len(soMasters))
 	tx, err := dao.Begin()
 	if err != nil {
@@ -92,8 +89,7 @@ func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster)
 	createSoMaster := fmt.Sprintf(insertSoMaster, xid)
 	createSoItem := fmt.Sprintf(insertSoItem, xid)
 
-	logger.Debug(fmt.Sprintf("createSoMaster = %s", createSoMaster))
-	logger.Debug(fmt.Sprintf("createSoItem = %s", createSoItem))
+	log.Debug(fmt.Sprintf("createSoMaster = %s, createSoItem = %s", createSoMaster, createSoItem))
 
 	for _, soMaster := range soMasters {
 		soid := NextID()

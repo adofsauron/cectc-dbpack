@@ -22,8 +22,6 @@ import (
 	"fmt"
 
 	"github.com/cectc/dbpack/pkg/log"
-	go_logger "github.com/phachon/go-logger"
-
 )
 
 const (
@@ -41,15 +39,13 @@ type AllocateInventoryReq struct {
 }
 
 func (dao *Dao) AllocateInventory(ctx context.Context, xid string, reqs []*AllocateInventoryReq) error {
-	logger := go_logger.NewLogger()
-
 	tx, err := dao.Begin()
 	if err != nil {
 		return err
 	}
 
 	updateInventory := fmt.Sprintf(allocateInventorySql, xid)
-	logger.Debug(fmt.Sprintf("updateInventory = %s", updateInventory))
+	log.Debug(fmt.Sprintf("updateInventory = %s", updateInventory))
 
 	for _, req := range reqs {
 		_, err := tx.Exec(updateInventory, req.Qty, req.Qty, req.ProductSysNo, req.Qty)
