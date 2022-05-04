@@ -143,6 +143,25 @@ func (f *_mysqlFilter) PostHandle(ctx context.Context, result proto.Result, conn
 }
 
 func (f *_mysqlFilter) processBeforeDelete(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, deleteStmt *ast.DeleteStmt) error {
+	if has, _ := hasGlobalHint(deleteStmt.TableHints); has {
+		global_executor := &globalLockExecutor{
+			conn:       conn,
+			deleteStmt: deleteStmt,
+			isUpdate:   false,
+		}
+
+		ret, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
+		if err != nil {
+			return err
+		}
+
+		if !ret {
+			return errors.New("processBeforeDelete fail, globalLockExecutor Executable not sucess")
+		}
+
+		return nil
+	}
+
 	if has, _ := hasXIDHint(deleteStmt.TableHints); !has {
 		return nil
 	}
@@ -162,6 +181,25 @@ func (f *_mysqlFilter) processBeforeDelete(ctx context.Context, conn *driver.Bac
 }
 
 func (f *_mysqlFilter) processBeforeUpdate(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, updateStmt *ast.UpdateStmt) error {
+	if has, _ := hasGlobalHint(updateStmt.TableHints); has {
+		global_executor := &globalLockExecutor{
+			conn:       conn,
+			updateStmt: updateStmt,
+			isUpdate:   true,
+		}
+
+		ret, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
+		if err != nil {
+			return err
+		}
+
+		if !ret {
+			return errors.New("processBeforeUpdate fail, globalLockExecutor Executable not sucess")
+		}
+
+		return nil
+	}
+
 	if has, _ := hasXIDHint(updateStmt.TableHints); !has {
 		return nil
 	}
