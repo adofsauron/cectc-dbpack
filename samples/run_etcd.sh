@@ -2,8 +2,8 @@
 
 mkdir -p logs
 
-pkill etcd
-sleep 3s
+# pkill etcd
+# sleep 3s
 
 rm default.etcd -rf
 
