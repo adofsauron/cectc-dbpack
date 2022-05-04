@@ -150,12 +150,12 @@ func (f *_mysqlFilter) processBeforeDelete(ctx context.Context, conn *driver.Bac
 			isUpdate:   false,
 		}
 
-		ret, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
+		is_success, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
 		if err != nil {
 			return err
 		}
 
-		if !ret {
+		if !is_success { // prevent case: in futher return false, nil
 			return errors.New("processBeforeDelete fail, globalLockExecutor Executable not sucess")
 		}
 
@@ -188,12 +188,12 @@ func (f *_mysqlFilter) processBeforeUpdate(ctx context.Context, conn *driver.Bac
 			isUpdate:   true,
 		}
 
-		ret, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
+		is_success, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
 		if err != nil {
 			return err
 		}
 
-		if !ret {
+		if !is_success { // prevent case: in futher return false, nil
 			return errors.New("processBeforeUpdate fail, globalLockExecutor Executable not sucess")
 		}
 
