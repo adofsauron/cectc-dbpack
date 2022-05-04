@@ -39,16 +39,11 @@ type AllocateInventoryReq struct {
 }
 
 func (dao *Dao) AllocateInventory(ctx context.Context, xid string, reqs []*AllocateInventoryReq) error {
-	log.Debug(fmt.Sprintf("AllocateInventory xid = %s", xid))
-
 	tx, err := dao.Begin()
 	if err != nil {
 		return err
 	}
-
 	updateInventory := fmt.Sprintf(allocateInventorySql, xid)
-	log.Debug(fmt.Sprintf("updateInventory = %s", updateInventory))
-
 	for _, req := range reqs {
 		_, err := tx.Exec(updateInventory, req.Qty, req.Qty, req.ProductSysNo, req.Qty)
 		if err != nil {

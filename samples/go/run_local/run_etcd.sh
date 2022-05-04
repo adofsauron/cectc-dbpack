@@ -7,4 +7,4 @@ mkdir -p logs
 
 rm default.etcd -rf
 
-etcd 2>&1  | tee -a ./logs/etcd.log > ./logs/etcd.log &
+etcd 2>&1  | tee -a logs/etcd.log > logs/etcd.log &

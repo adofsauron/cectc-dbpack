@@ -65,6 +65,7 @@ unit-test: ## run unit test
 
 ########################################################
 build:  ## build dbpack cli, and put in dist dir
+	go env -w GOPROXY=https://goproxy.cn,direct
 	@mkdir -p dist
 	${GO_BUILD_ENVVARS} go build -gcflags=all="-N -l" -o ./dist/dbpack ./cmd
 

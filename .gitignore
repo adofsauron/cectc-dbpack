@@ -3,4 +3,6 @@
 coverage.txt
 dist/
 samples/logs/
+samples/go/logs/
+samples/go/run_local/logs/
 samples/default.etcd/
