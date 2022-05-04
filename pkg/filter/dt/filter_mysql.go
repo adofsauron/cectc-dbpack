@@ -35,6 +35,7 @@ import (
 	"github.com/cectc/dbpack/pkg/proto"
 	"github.com/cectc/dbpack/third_party/parser/ast"
 	"github.com/cectc/dbpack/third_party/parser/model"
+
 )
 
 const (
@@ -43,6 +44,7 @@ const (
 	XID             = "x_dbpack_xid"
 	BranchID        = "x_dbpack_branch_id"
 	hintXID         = "xid"
+	hintGlobalLock  = "GlobalLock"
 )
 
 func init() {
@@ -104,9 +106,9 @@ func (f *_mysqlFilter) PreHandle(ctx context.Context, conn proto.Connection) err
 		}
 		switch stmtNode := stmt.StmtNode.(type) {
 		case *ast.DeleteStmt:
-			return processBeforeDelete(ctx, bc, stmt, stmtNode)
+			return f.processBeforeDelete(ctx, bc, stmt, stmtNode)
 		case *ast.UpdateStmt:
-			return processBeforeUpdate(ctx, bc, stmt, stmtNode)
+			return f.processBeforeUpdate(ctx, bc, stmt, stmtNode)
 		default:
 			return nil
 		}
@@ -140,7 +142,7 @@ func (f *_mysqlFilter) PostHandle(ctx context.Context, result proto.Result, conn
 	return nil
 }
 
-func processBeforeDelete(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, deleteStmt *ast.DeleteStmt) error {
+func (f *_mysqlFilter) processBeforeDelete(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, deleteStmt *ast.DeleteStmt) error {
 	if has, _ := hasXIDHint(deleteStmt.TableHints); !has {
 		return nil
 	}
@@ -159,7 +161,7 @@ func processBeforeDelete(ctx context.Context, conn *driver.BackendConnection, st
 	return nil
 }
 
-func processBeforeUpdate(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, updateStmt *ast.UpdateStmt) error {
+func (f *_mysqlFilter) processBeforeUpdate(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, updateStmt *ast.UpdateStmt) error {
 	if has, _ := hasXIDHint(updateStmt.TableHints); !has {
 		return nil
 	}
@@ -334,6 +336,17 @@ func hasXIDHint(hints []*ast.TableOptimizerHint) (bool, string) {
 			hintData := hint.HintData.(model.CIStr)
 			xid := hintData.String()
 			return true, xid
+		}
+	}
+	return false, ""
+}
+
+func hasGlobalHint(hints []*ast.TableOptimizerHint) (bool, string) {
+	for _, hint := range hints {
+		if strings.EqualFold(hint.HintName.String(), hintGlobalLock) {
+			hintData := hint.HintData.(model.CIStr)
+			globalLock := hintData.String()
+			return true, globalLock
 		}
 	}
 	return false, ""
