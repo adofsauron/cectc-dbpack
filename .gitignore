@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+.vscode/
 coverage.txt
 dist/
 samples/go/run_local/logs/
