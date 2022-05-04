@@ -91,7 +91,7 @@ func (dao *Dao) CreateSO(ctx context.Context, xid string, soMasters []*SoMaster)
 	createSoMaster := fmt.Sprintf(insertSoMaster, xid)
 	createSoItem := fmt.Sprintf(insertSoItem, xid)
 
-	log.Debug(fmt.Sprintf("createSoMaster = %s, createSoItem = %s", createSoMaster, createSoItem))
+	log.Debug(fmt.Sprintf("\ncreateSoMaster = %s, \ncreateSoItem = %s", createSoMaster, createSoItem))
 
 	for _, soMaster := range soMasters {
 		soid := NextID()
