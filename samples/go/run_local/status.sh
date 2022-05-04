@@ -9,4 +9,5 @@ ps -aux | grep dbpack | grep -v grep
 echo -e "\n"
 
 # etcd get all keys
-etcdctl get --from-key ""
+export ETCDCTL_API=3
+etcdctl get --from-key "gs"
