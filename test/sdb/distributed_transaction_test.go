@@ -33,6 +33,7 @@ import (
 	"github.com/cectc/dbpack/pkg/dt/storage/etcd"
 	"github.com/cectc/dbpack/pkg/resource"
 	"github.com/cectc/dbpack/third_party/pools"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -90,6 +91,8 @@ func (suite *_DistributedTransactionSuite) SetupSuite() {
 
 	dt.InitDistributedTransactionManager(conf, driver)
 
+	driverName := "mysql"
+	dataSourceName := phiEmployeeDSN
 	db, err := sql.Open(driverName, dataSourceName)
 	if suite.NoErrorf(err, "connection error: %v", err) {
 		suite.db = db
