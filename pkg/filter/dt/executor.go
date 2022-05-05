@@ -66,6 +66,7 @@ type globalLockExecutor struct {
 	conn        *driver.BackendConnection
 	originalSQL string
 	isUpdate    bool
+	selectStmt  *ast.SelectStmt
 	deleteStmt  *ast.DeleteStmt
 	updateStmt  *ast.UpdateStmt
 }

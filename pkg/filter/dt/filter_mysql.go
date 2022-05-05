@@ -35,7 +35,6 @@ import (
 	"github.com/cectc/dbpack/pkg/proto"
 	"github.com/cectc/dbpack/third_party/parser/ast"
 	"github.com/cectc/dbpack/third_party/parser/model"
-
 )
 
 const (
@@ -109,6 +108,10 @@ func (f *_mysqlFilter) PreHandle(ctx context.Context, conn proto.Connection) err
 			return f.processBeforeDelete(ctx, bc, stmt, stmtNode)
 		case *ast.UpdateStmt:
 			return f.processBeforeUpdate(ctx, bc, stmt, stmtNode)
+		case *ast.SelectStmt:
+			if stmtNode.LockInfo != nil && stmtNode.LockInfo.LockType == ast.SelectLockForUpdate {
+				return f.processBeforeSelectForUpdate(ctx, bc, stmt, stmtNode)
+			}
 		default:
 			return nil
 		}
@@ -133,7 +136,7 @@ func (f *_mysqlFilter) PostHandle(ctx context.Context, result proto.Result, conn
 			return f.processAfterUpdate(ctx, bc, result, stmt, stmtNode)
 		case *ast.SelectStmt:
 			if stmtNode.LockInfo != nil && stmtNode.LockInfo.LockType == ast.SelectLockForUpdate {
-				return f.processSelectForUpdate(ctx, bc, result, stmt, stmtNode)
+				return f.processAfterSelectForUpdate(ctx, bc, result, stmt, stmtNode)
 			}
 		default:
 			return nil
@@ -215,6 +218,29 @@ func (f *_mysqlFilter) processBeforeUpdate(ctx context.Context, conn *driver.Bac
 	if !proto.WithVariable(ctx, beforeImage, bi) {
 		return errors.New("set before image failed")
 	}
+	return nil
+}
+
+func (f *_mysqlFilter) processBeforeSelectForUpdate(ctx context.Context, conn *driver.BackendConnection, stmt *proto.Stmt, selectStmt *ast.SelectStmt) error {
+	if has, _ := hasGlobalHint(selectStmt.TableHints); !has {
+		return nil
+	}
+
+	global_executor := &globalLockExecutor{
+		conn:       conn,
+		selectStmt: selectStmt,
+		isUpdate:   false,
+	}
+
+	is_success, err := global_executor.Executable(ctx, f.lockRetryInterval, f.lockRetryTimes)
+	if err != nil {
+		return err
+	}
+
+	if !is_success { // prevent case: in futher return false, nil
+		return errors.New("processBeforeUpdate fail, globalLockExecutor Executable not sucess")
+	}
+
 	return nil
 }
 
@@ -323,7 +349,7 @@ func (f *_mysqlFilter) processAfterUpdate(ctx context.Context, conn *driver.Back
 	return dt.GetUndoLogManager().InsertUndoLogWithNormal(conn, xid, branchID, undoLog)
 }
 
-func (f *_mysqlFilter) processSelectForUpdate(ctx context.Context, conn *driver.BackendConnection,
+func (f *_mysqlFilter) processAfterSelectForUpdate(ctx context.Context, conn *driver.BackendConnection,
 	result proto.Result, stmt *proto.Stmt, selectStmt *ast.SelectStmt) error {
 	has, _ := hasXIDHint(selectStmt.TableHints)
 	if !has {
