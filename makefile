@@ -66,6 +66,11 @@ unit-test: ## run unit test
 	go test ./pkg/... -coverprofile=coverage.txt -covermode=atomic
 
 ########################################################
+vendor: ## make vendor
+	go mod tidy
+	go mod vendor
+
+########################################################
 build: ## build dbpack cli, and put in dist dir
 	@mkdir -p dist
 	${GO_BUILD_ENVVARS} go build $(GO_BUILD_ARGS) -o ./dist/dbpack ./cmd
