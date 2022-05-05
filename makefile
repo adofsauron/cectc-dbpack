@@ -1,6 +1,7 @@
 PKG := "github.com/cectc/dbpack"
 PKG_LIST := $(shell go list ${PKG}/... | grep /pkg/)
 GO_FILES := $(shell find . -name '*.go' | grep /pkg/ | grep -v _test.go)
+GO_BUILD_ARGS := -gcflags=all="-N -l"
 
 # Environment variables set when running the Go compiler.
 GOOS ?= $(shell go env GOOS)
@@ -70,7 +71,7 @@ unit-test: ## run unit test
 ########################################################
 build: go_env  ## build dbpack cli, and put in dist dir
 	@mkdir -p dist
-	${GO_BUILD_ENVVARS} go build -gcflags=all="-N -l" -o ./dist/dbpack ./cmd
+	${GO_BUILD_ENVVARS} go build $(GO_BUILD_ARGS) -o ./dist/dbpack ./cmd
 
 ########################################################
 docker-build: build ## build docker image
