@@ -238,7 +238,7 @@ func (f *_mysqlFilter) processBeforeSelectForUpdate(ctx context.Context, conn *d
 	}
 
 	if !is_success { // prevent case: in futher return false, nil
-		return errors.New("processBeforeUpdate fail, globalLockExecutor Executable not sucess")
+		return errors.New("processBeforeSelectForUpdate fail, globalLockExecutor Executable not sucess")
 	}
 
 	return nil
