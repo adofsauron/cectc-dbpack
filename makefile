@@ -67,8 +67,8 @@ unit-test: ## run unit test
 
 ########################################################
 vendor: ## make vendor
-	go mod tidy
-	go mod vendor
+	${GO_BUILD_ENVVARS} go mod tidy
+	${GO_BUILD_ENVVARS} go mod vendor
 
 ########################################################
 build: ## build dbpack cli, and put in dist dir
