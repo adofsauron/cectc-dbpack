@@ -113,14 +113,16 @@ func (f *_mysqlFilter) PreHandle(ctx context.Context, conn proto.Connection) err
 	case *ast.UpdateStmt:
 		return f.processBeforeUpdate(ctx, bc, stmt, stmtNode)
 	case *ast.SelectStmt:
-		if stmtNode.LockInfo != nil && stmtNode.LockInfo.LockType == ast.SelectLockForUpdate {
-			return f.processBeforeSelectForUpdate(ctx, bc, stmt, stmtNode)
+		if nil == stmtNode.LockInfo {
+			return nil
 		}
+		if stmtNode.LockInfo.LockType != ast.SelectLockForUpdate {
+			return nil
+		}
+		return f.processBeforeSelectForUpdate(ctx, bc, stmt, stmtNode)
 	default:
 		return nil
 	}
-
-	return nil
 }
 
 func (f *_mysqlFilter) PostHandle(ctx context.Context, result proto.Result, conn proto.Connection) error {
