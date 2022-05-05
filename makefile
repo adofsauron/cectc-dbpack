@@ -10,6 +10,7 @@ GO_BUILD_ENVVARS = \
 	GOOS=$(GOOS) \
 	GOARCH=$(GOARCH) \
 	CGO_ENABLED=0 \
+	GOPROXY=https://goproxy.cn,direct \
 
 .DEFAULT_GOAL := build
 .PHONY: all default test lint fmt fmtcheck cmt errcheck race license help msan dep build docker-build clean
@@ -34,10 +35,6 @@ lint:  ## lint check
 cmt: ## auto comment exported Function
 	@hash gocmt 2>&- || go get -u github.com/Gnouc/gocmt
 	@gocmt -d pkg -i
-
-########################################################
-go_env: ## go env 
-	go env -w GOPROXY=https://goproxy.cn,direct 
 
 ########################################################
 errcheck: ## check error
@@ -69,7 +66,7 @@ unit-test: ## run unit test
 	go test ./pkg/... -coverprofile=coverage.txt -covermode=atomic
 
 ########################################################
-build: go_env  ## build dbpack cli, and put in dist dir
+build: ## build dbpack cli, and put in dist dir
 	@mkdir -p dist
 	${GO_BUILD_ENVVARS} go build $(GO_BUILD_ARGS) -o ./dist/dbpack ./cmd
 
