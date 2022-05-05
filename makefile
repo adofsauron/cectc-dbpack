@@ -35,6 +35,10 @@ cmt: ## auto comment exported Function
 	@gocmt -d pkg -i
 
 ########################################################
+go_env: ## go env 
+	go env -w GOPROXY=https://goproxy.cn,direct 
+
+########################################################
 errcheck: ## check error
 	@hash errcheck 2>&- || go get -u github.com/kisielk/errcheck
 	@errcheck pkg/...
@@ -64,8 +68,7 @@ unit-test: ## run unit test
 	go test ./pkg/... -coverprofile=coverage.txt -covermode=atomic
 
 ########################################################
-build:  ## build dbpack cli, and put in dist dir
-	go env -w GOPROXY=https://goproxy.cn,direct
+build: go_env  ## build dbpack cli, and put in dist dir
 	@mkdir -p dist
 	${GO_BUILD_ENVVARS} go build -gcflags=all="-N -l" -o ./dist/dbpack ./cmd
 
