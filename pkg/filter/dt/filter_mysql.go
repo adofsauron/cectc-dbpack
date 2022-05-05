@@ -98,24 +98,28 @@ func (f *_mysqlFilter) GetName() string {
 func (f *_mysqlFilter) PreHandle(ctx context.Context, conn proto.Connection) error {
 	bc := conn.(*driver.BackendConnection)
 	commandType := proto.CommandType(ctx)
-	if commandType == constant.ComStmtExecute {
-		stmt := proto.PrepareStmt(ctx)
-		if stmt == nil {
-			return errors.New("prepare stmt should not be nil")
-		}
-		switch stmtNode := stmt.StmtNode.(type) {
-		case *ast.DeleteStmt:
-			return f.processBeforeDelete(ctx, bc, stmt, stmtNode)
-		case *ast.UpdateStmt:
-			return f.processBeforeUpdate(ctx, bc, stmt, stmtNode)
-		case *ast.SelectStmt:
-			if stmtNode.LockInfo != nil && stmtNode.LockInfo.LockType == ast.SelectLockForUpdate {
-				return f.processBeforeSelectForUpdate(ctx, bc, stmt, stmtNode)
-			}
-		default:
-			return nil
-		}
+	if commandType != constant.ComStmtExecute {
+		return nil
 	}
+
+	stmt := proto.PrepareStmt(ctx)
+	if stmt == nil {
+		return errors.New("prepare stmt should not be nil")
+	}
+
+	switch stmtNode := stmt.StmtNode.(type) {
+	case *ast.DeleteStmt:
+		return f.processBeforeDelete(ctx, bc, stmt, stmtNode)
+	case *ast.UpdateStmt:
+		return f.processBeforeUpdate(ctx, bc, stmt, stmtNode)
+	case *ast.SelectStmt:
+		if stmtNode.LockInfo != nil && stmtNode.LockInfo.LockType == ast.SelectLockForUpdate {
+			return f.processBeforeSelectForUpdate(ctx, bc, stmt, stmtNode)
+		}
+	default:
+		return nil
+	}
+
 	return nil
 }
 
