@@ -37,6 +37,7 @@ import (
 )
 
 const (
+	driverName     = "mysql"
 	phiEmployeeDSN = `root:123456@tcp(127.0.0.1:3306)/employees?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8`
 
 	insertEmployeeForDT   = `INSERT INTO employees ( id, emp_no, birth_date, first_name, last_name, gender, hire_date ) VALUES (?, ?, ?, ?, ?, ?, ?)`
@@ -91,9 +92,7 @@ func (suite *_DistributedTransactionSuite) SetupSuite() {
 
 	dt.InitDistributedTransactionManager(conf, driver)
 
-	driverName := "mysql"
-	dataSourceName := phiEmployeeDSN
-	db, err := sql.Open(driverName, dataSourceName)
+	db, err := sql.Open(driverName, phiEmployeeDSN)
 	if suite.NoErrorf(err, "connection error: %v", err) {
 		suite.db = db
 		db.Exec(insertEmployeeForDT, 1, 100002, "1992-06-04", "jane", "watson", "F", "2013-06-01")
