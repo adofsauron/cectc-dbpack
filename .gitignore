@@ -3,5 +3,6 @@
 .vscode/
 coverage.txt
 dist/
+vendor/
 samples/go/run_local/logs/
 samples/go/run_local/default.etcd/
